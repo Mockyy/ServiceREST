@@ -37,15 +37,35 @@ if ($methode == 'GET')
 }
 else if ($methode == 'POST')
 {
+    $ncli = $_POST['NCLI'];
+    $nom = $_POST['NOM'];
+    $adresse = $_POST['ADRESSE'];
+    $localite = $_POST['LOCALITE'];
+    $categorie = $_POST['CATEGORIE'];
+    $compte = $_POST['COMPTE'];
+
     $sql = $connexion->prepare("INSERT INTO client VALUES (?, ?, ?, ?, ?, ?)");
-    if ($sql)
+    if ($sql->bind_param('ssssss', $ncli, $nom, $adresse, $localite, $categorie, $compte))
     {
-        $sql->bind_param('ssssss', $_POST["NCLI"], $_POST["NOM"], $_POST["ADRESSE"], $_POST["LOCALITE"], $_POST["CATEGORIE"], $_POST["COMPTE"]);
+        echo "Bind_param success";
     }
     else
-        echo "</br>" . "Request failed" . $connexion->error;
+        echo "Bind_param failed "  . $sql->errno . ") " . $sql->error;
 
-    $sql->execute();
+    if ($sql->execute())
+        echo "Execute success";
+    else
+        echo "Execute failed " . $sql->errno . ") " . $sql->error;
+   
+    // $sql = "INSERT INTO client VALUES ($ncli, $nom, $adresse, $localite, $categorie, $compte)";
+    // if (mysqli_query($connexion, $sql))
+    // {
+    //     echo "Success";
+    // }
+    // else
+    // {
+    //     echo "Failed";
+    // }
 }
 
 function rechercheLocalite()
